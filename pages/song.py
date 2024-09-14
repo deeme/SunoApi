@@ -227,70 +227,70 @@ if aid != "" and len(aid) == 36:
                 <h3>{title}</h3> 
                 ''', unsafe_allow_html=True)
             cols = None
-            if data['metadata']['audio_prompt_id'] is not None:
-                cols = container.columns(4)
-            else:
-                cols = container.columns(3)
+            # if ('audio_prompt_id' in data['metadata'] and data['metadata']['audio_prompt_id'] is not None) or ('stem_from_id' in data['metadata'] and data['metadata']['stem_from_id'] is not None):
+            #     cols = container.columns(4)
+            # else:
+            cols = container.columns(3)
 
             # part_button = None
-            if data['metadata']['concat_history'] is not None:
-                # cols[0].markdown(f'''
-                # <h3>{i18n("Full Song")}</h3> 
-                # ''', unsafe_allow_html=True)
-                part_button = cols[0].button(f'''{i18n("Full Song")}''', type="secondary")
-            elif data['metadata']['history'] is not None:
-                # cols[0].markdown(f'''
-                # <h3>{i18n("Song Part")} {len(data['metadata']['history'])+1}</h3> 
-                # ''', unsafe_allow_html=True)
-                part_button = cols[0].button(f'''{i18n("Song Part")} {len(data['metadata']['history'])+1}''', type="secondary")
-            else:
+            # if data['metadata']['concat_history'] is not None:
+            #     # cols[0].markdown(f'''
+            #     # <h3>{i18n("Full Song")}</h3> 
+            #     # ''', unsafe_allow_html=True)
+            #     part_button = cols[0].button(f'''{i18n("Full Song")}''', type="secondary")
+            # elif data['metadata']['history'] is not None:
+            #     # cols[0].markdown(f'''
+            #     # <h3>{i18n("Song Part")} {len(data['metadata']['history'])+1}</h3> 
+            #     # ''', unsafe_allow_html=True)
+            #     part_button = cols[0].button(f'''{i18n("Song Part")} {len(data['metadata']['history'])+1}''', type="secondary")
+            # else:
                 # cols[0].markdown(f'''
                 # <h3>{i18n("Song Part")} 1</h3> 
                 # ''', unsafe_allow_html=True)
-                part_button = cols[0].button(f'''{i18n("Song Part")} 1''', type="secondary")
+            part_button = cols[0].button(f'''{i18n("Song Part")} 1''', type="secondary")
 
             max_width = 540
-            if data['metadata']['concat_history'] is not None:
-                max_width = max_width * len(data['metadata']['concat_history'])
-            elif data['metadata']['history'] is not None:
-                max_width = max_width * len(data['metadata']['history'])
+            # if data['metadata']['concat_history'] is not None:
+            #     max_width = max_width * len(data['metadata']['concat_history'])
+            # elif data['metadata']['history'] is not None:
+            #     max_width = max_width * len(data['metadata']['history'])
             
 
-            part_modal = Modal(title=title, key="part_modal", padding=15, max_width=max_width)
-            if part_button and (data['metadata']['history'] is not None or data['metadata']['concat_history'] is not None):
-                part_modal.open()
-            if part_modal.is_open():
-                with part_modal.container():
-                    token = get_random_token()
-                    if data['metadata']['concat_history'] is not None:
-                        part_modal_cols = st.columns(len(data['metadata']['concat_history']))
-                        for index, item in enumerate(data['metadata']['concat_history']):
-                            part_modal_cols[index].markdown(f'''<div style="display: flex; justify-content: center; align-items: center;height:50px;">{i18n("Song Part")} {str(index+1)}&nbsp;&nbsp;:&nbsp;&nbsp;
-                            <a href="/song?id={item['id'].replace("m_", "")}" target="_blank">{item['id'].replace("m_", "")}</a></div>
-                            ''', unsafe_allow_html=True)
-                            resp = get_feed(item['id'].replace("m_", ""), token)
-                            status = resp["detail"] if "detail" in resp else resp[0]["status"]
-                            if status != "Unauthorized" and status != "Not found." and status != "error" and "refused" not in status:
-                                part_modal_cols[index].video(resp[0]['video_url'])
-                            else:
-                                part_modal_cols[index].error(i18n("FetchFeed Error") + (status if "metadata" not in resp else resp[0]['metadata']["error_message"]))
-                    elif data['metadata']['history'] is not None:
-                        part_modal_cols = st.columns(len(data['metadata']['history']))
-                        for index, item in enumerate(data['metadata']['history']):
-                            part_modal_cols[index].markdown(f'''<div style="display: flex; justify-content: center; align-items: center;height:50px;">{i18n("Song Part")} {str(index+1)}&nbsp;&nbsp;:&nbsp;&nbsp;
-                            <a href="/song?id={item['id'].replace("m_", "")}" target="_blank">{item['id'].replace("m_", "")}</a></div>
-                            ''', unsafe_allow_html=True)
-                            resp = get_feed(item['id'].replace("m_", ""), token)
-                            status = resp["detail"] if "detail" in resp else resp[0]["status"]
-                            if status != "Unauthorized" and status != "Not found." and status != "error" and "refused" not in status:
-                                part_modal_cols[index].video(resp[0]['video_url'])
-                            else:
-                                part_modal_cols[index].error(i18n("FetchFeed Error") + (status if "metadata" not in resp else resp[0]['metadata']["error_message"]))
+            # part_modal = Modal(title=title, key="part_modal", padding=15, max_width=max_width)
+            # if part_button and (data['metadata']['history'] is not None or data['metadata']['concat_history'] is not None):
+            #     part_modal.open()
+            # if part_modal.is_open():
+            #     with part_modal.container():
+            #         token = get_random_token()
+            #         if data['metadata']['concat_history'] is not None:
+            #             part_modal_cols = st.columns(len(data['metadata']['concat_history']))
+            #             for index, item in enumerate(data['metadata']['concat_history']):
+            #                 part_modal_cols[index].markdown(f'''<div style="display: flex; justify-content: center; align-items: center;height:50px;">{i18n("Song Part")} {str(index+1)}&nbsp;&nbsp;:&nbsp;&nbsp;
+            #                 <a href="/song?id={item['id'].replace("m_", "")}" target="_blank">{item['id'].replace("m_", "")}</a></div>
+            #                 ''', unsafe_allow_html=True)
+            #                 resp = get_feed(item['id'].replace("m_", ""), token)
+            #                 status = resp["detail"] if "detail" in resp else resp[0]["status"]
+            #                 if status != "Unauthorized" and status != "Not found." and status != "error" and "refused" not in status:
+            #                     part_modal_cols[index].video(resp[0]['video_url'])
+            #                 else:
+            #                     part_modal_cols[index].error(i18n("FetchFeed Error") + (status if "metadata" not in resp else resp[0]['metadata']["error_message"]))
+            #         elif data['metadata']['history'] is not None:
+            #             part_modal_cols = st.columns(len(data['metadata']['history']))
+            #             for index, item in enumerate(data['metadata']['history']):
+            #                 part_modal_cols[index].markdown(f'''<div style="display: flex; justify-content: center; align-items: center;height:50px;">{i18n("Song Part")} {str(index+1)}&nbsp;&nbsp;:&nbsp;&nbsp;
+            #                 <a href="/song?id={item['id'].replace("m_", "")}" target="_blank">{item['id'].replace("m_", "")}</a></div>
+            #                 ''', unsafe_allow_html=True)
+            #                 resp = get_feed(item['id'].replace("m_", ""), token)
+            #                 status = resp["detail"] if "detail" in resp else resp[0]["status"]
+            #                 if status != "Unauthorized" and status != "Not found." and status != "error" and "refused" not in status:
+            #                     part_modal_cols[index].video(resp[0]['video_url'])
+            #                 else:
+            #                     part_modal_cols[index].error(i18n("FetchFeed Error") + (status if "metadata" not in resp else resp[0]['metadata']["error_message"]))
 
             reuse_button = cols[1].button(i18n("Reuse Prompt"), type="secondary")
             if reuse_button:
                 st.session_state['title_input'] = title
-                st.session_state['tags_input'] = "(no style)" if data['metadata']['tags'] is None or "" else data['metadata']['tags']
+                st.session_state['tags_input'] = "(no style)" if "tags" not in data['metadata'] else data['metadata']['tags']
                 st.session_state['prompt_input'] = "" if data['metadata']['prompt'] == "[Instrumental]" else data['metadata']['prompt']
                 st.session_state['continue_at'] = ""
                 st.session_state['continue_clip_id'] = ""
@@ -300,37 +300,37 @@ if aid != "" and len(aid) == 36:
             continue_button = cols[2].button(i18n("Continue Extend"), type="secondary")
             if continue_button:
                 st.session_state['title_input'] = title
-                st.session_state['tags_input'] = "(no style)" if data['metadata']['tags'] is None or "" else data['metadata']['tags']
+                st.session_state['tags_input'] = "(no style)" if "tags" not in data['metadata'] else data['metadata']['tags']
                 st.session_state['prompt_input'] = ""
                 st.session_state['continue_at'] = str(data['metadata']['duration'])[0:6]
                 st.session_state['continue_clip_id'] = aid
                 st.session_state['model_name'] = "chirp-v3-0" if data['model_name'] == "chirp-v3" else "chirp-v3-5"
                 st.switch_page("main.py")
 
-            if data['metadata']['audio_prompt_id'] is not None:
-                whole_button = cols[3].button(i18n("Get Whole Song"), type="secondary")
-                if whole_button:
-                    data1 = {
-                        "clip_id": aid
-                    }
-                    # print(data1)
-                    # print("\n")
-                    resp = get_whole_song(data1)
-                    # print(resp)
-                    # print("\n")
-                    status = resp["status"] if "status" in resp else resp["detail"]
-                    if status == "queued" or status == "complete":
-                        result = suno_sqlite.operate_one("insert into music (aid, data, private) values(?,?,?)", (str(resp["id"]), str(resp), 0))
-                        resp0 = fetch_status(resp["id"], col2)
-                        if resp0[0]["status"] == "complete":
-                            col2.success(i18n("Generate Success") + resp0[0]["id"])
-                            st.session_state.aid = resp0[0]["id"]
-                            # print(st.session_state.aid)
-                            st.switch_page("pages/song.py")
-                        else:
-                            col2.error(i18n("Generate Status Error")  + (resp0[0]['status'] if resp0[0]['metadata']["error_message"] is None else resp0[0]['metadata']["error_message"]))
-                    else:
-                        col2.error(i18n("Generate Submit Error") + status)
+            # if ('audio_prompt_id' in data['metadata'] and data['metadata']['audio_prompt_id'] is not None) or ('stem_from_id' in data['metadata'] and data['metadata']['stem_from_id'] is not None):
+            #     whole_button = cols[3].button(i18n("Get Whole Song"), type="secondary")
+            #     if whole_button:
+            #         data1 = {
+            #             "clip_id": aid
+            #         }
+            #         # print(data1)
+            #         # print("\n")
+            #         resp = get_whole_song(data1)
+            #         # print(resp)
+            #         # print("\n")
+            #         status = resp["status"] if "status" in resp else resp["detail"]
+            #         if status == "queued" or status == "complete":
+            #             result = suno_sqlite.operate_one("insert into music (aid, data, private) values(?,?,?)", (str(resp["id"]), str(resp), 0))
+            #             resp0 = fetch_status(resp["id"], col2)
+            #             if resp0[0]["status"] == "complete":
+            #                 col2.success(i18n("Generate Success") + resp0[0]["id"])
+            #                 st.session_state.aid = resp0[0]["id"]
+            #                 # print(st.session_state.aid)
+            #                 st.switch_page("pages/song.py")
+            #             else:
+            #                 col2.error(i18n("Generate Status Error")  + (resp0[0]['status'] if resp0[0]['metadata']["error_message"] is None else resp0[0]['metadata']["error_message"]))
+            #         else:
+            #             col2.error(i18n("Generate Submit Error") + status)
 
             # similar_button = None
             # if data['metadata']['audio_prompt_id'] is not None:
@@ -347,7 +347,7 @@ if aid != "" and len(aid) == 36:
                             <a href="/song?id={aid}" target="_blank">{aid}</a>
                             ''', unsafe_allow_html=True)
 
-            container.write("\n\n" + i18n("Desc Prompt") + ("None\n" if data['metadata']['gpt_description_prompt'] is None or "" else data['metadata']['gpt_description_prompt']) + " \n\n" + i18n("Tags") +  ("None\n" if data['metadata']['tags'] is None or "" else data['metadata']['tags'].strip() + "\n") + "&nbsp;&nbsp;" + i18n("Music Duration")  + ("None\n" if data['metadata']['duration'] is None or "" else str(int(data['metadata']['duration']/60)) + ":" + str("00" if int(data['metadata']['duration']%60) == 0 else ("0" + str(int(data['metadata']['duration']%60))  if int(data['metadata']['duration']%60) <10 else int(data['metadata']['duration']%60))) + " \n") + "\n\n" + i18n("Music Created At") + ("None\n" if data['created_at'] is None or "" else localdatetime(data['created_at'])) + "&nbsp;&nbsp;" + i18n("Select Model") +  ("None\n" if data['model_name'] is None or "" else i18n("Upload Audio Type") if data['metadata']['type'] == "upload" else data['model_name'] + "\n") + "\n\n" + i18n("Music Prompt"))
+            container.write("\n\n" + i18n("Desc Prompt") + ("None\n" if "gpt_description_prompt" not in data else data['metadata']['gpt_description_prompt']) + " \n\n" + i18n("Tags") +  ("None\n" if "tags" not in data['metadata'] else data['metadata']['tags'] + "\n") + "&nbsp;&nbsp;" + i18n("Music Duration")  + ("None\n" if data['metadata']['duration'] is None or "" else str(int(data['metadata']['duration']/60)) + ":" + str("00" if int(data['metadata']['duration']%60) == 0 else ("0" + str(int(data['metadata']['duration']%60))  if int(data['metadata']['duration']%60) <10 else int(data['metadata']['duration']%60))) + " \n") + "\n\n" + i18n("Music Created At") + ("None\n" if data['created_at'] is None or "" else localdatetime(data['created_at'])) + "&nbsp;&nbsp;" + i18n("Select Model") +  ("None\n" if data['model_name'] is None or "" else i18n("Upload Audio Type") if data['metadata']['type'] == "upload" else data['model_name'] + "\n") + "\n\n" + i18n("Music Prompt"))
 
             container.markdown("None\n" if data['metadata']['prompt'] is None or "" else data['metadata']['prompt'].replace("\n", "\n\n").replace("        ", ""), unsafe_allow_html=True)
 
